@@ -18,6 +18,18 @@ export default class ActivityStore {
             Date.parse(a.date) - Date.parse(b.date));
     }
 
+    /* The reduce function will take an array of objects (Object.entries) and reduce it to a single value => date string.
+       Then the date string will be a 'key' and the values for this 'key' will be an array of activities that take place on that date.*/ 
+    get groupedActivities() {
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date;
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+                return activities;
+            }, {} as {[key: string]: Activity[]})
+        )
+    }
+
     loadActivities = async () => {
         this.loadingInitial = true;
         try {
